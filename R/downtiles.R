@@ -51,33 +51,34 @@ getTiles <- function(extent=c(72,135,18,54),level=1:20,down.wd='/tmp',par=15) {
     sockconn<-showConnections(all=F)
     sockconn<-sapply(as.numeric(rownames(sockconn)),getConnection)
     sapply(sockconn,close)
-    cl <- makeCluster(detectCores()*par)
-    clusterMap(cl, download.file, url = testmap$url,
+    cl <- parallel::makeCluster(parallel::detectCores()*par)
+    parallel::clusterMap(cl, download.file, url = testmap$url,
                destfile =file.path(down.wd,testmap$paths),.scheduling = 'dynamic',
                mode='wb',method='curl',
                extra='--silent --retry-delay 20 --retry-max-time 10 --retry 10')
     cat('finished....\n')
-    stopCluster(cl)
-    if(require(servr)&&require(leaflet)){
-        show_map(center.x = mean( extent.cn[1],extent.cn[2],na.rm = T),
-                 center.y = mean(extent.cn[3],extent.cn[4],na.rm = T),
-                 zoom = mean(level))
-        servr::server_config(dir = down.wd,port ='8000')
-        servr::httd(dir = down.wd)
-    }
+    parallel::stopCluster(cl)
+    # if(require(servr)&&require(leaflet)){
+        # show_map(center.x = mean( extent.cn[1],extent.cn[2],na.rm = T),
+                 # center.y = mean(extent.cn[3],extent.cn[4],na.rm = T),
+                 # zoom = mean(level))
+        # library(servr)
+        # server_config(dir = down.wd,port ='8000')
+        # servr::httd(dir = down.wd,8000)
+    # }
 
 }
 
-show_map<-function(center.x=NULL,center.y=NULL,zoom=NULL,
-                   baseURL='http://127.0.0.1:8000/{z}/{x}/{y}.png'){
-    if(is.null(center.x)||is.null(center.y)||is.null(zoom)){
-      return()
-    }
-    library(leaflet)
-    leaflet()%>%addTiles(
-        urlTemplate =baseURL)%>%
-        setView(lng=center.x,lat =center.y,zoom=zoom)
-}
+# show_map<-function(center.x=NULL,center.y=NULL,zoom=NULL,
+#                    baseURL='http://127.0.0.1:8000/{z}/{x}/{y}.png'){
+#     if(is.null(center.x)||is.null(center.y)||is.null(zoom)){
+#       return()
+#     }
+#     library(leaflet)
+#     leaflet()%>%addTiles(
+#         urlTemplate =baseURL)%>%
+#         setView(lng=center.x,lat =center.y,zoom=zoom)
+# }
 
 deg2num<-function(lat_deg, lon_deg, zoom){
     lat_rad <- lat_deg * pi /180
