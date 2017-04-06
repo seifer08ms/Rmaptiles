@@ -1,0 +1,12 @@
+Package: Rmaptiles
+Title: A package to download map tiles
+Version: 0.0.0.9000
+Authors@R: person("Chenliang", "Wang", email = "hi181904665@gmail.com", role = c("aut", "cre"))
+Description: A package to download map tiles.
+Depends: R (>= 3.3.1)
+License: GPL-v3?
+Encoding: UTF-8
+LazyData: true
+Imports: parallel
+Suggests:servr,
+         leaflet
