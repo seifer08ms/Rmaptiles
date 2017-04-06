@@ -7,11 +7,17 @@
 #' @param down.wd character to indicate the path to store tiles
 #' @param par integer to indicate how much processes to be executed
 #' @import parallel
-#' @
 #' @export
 #' @examples
-#' hello(fname="Tomas",lname="Greif")
-
+#' library(geoChina)
+#' xy.1<-wgs2gcj(wgsLon = 119.9135,wgsLat = 30.76719)
+#' xy.2<-wgs2gcj(wgsLon =121.326,wgsLat = 32.03939 )
+#' getTiles(extent=c(xy.1$lng,xy.2$lng,xy.1$lat,xy.2$lat),level=1:17)
+#' serving tiles under the down.wd of getTiles()
+#' library(leaflet)
+#' leaflet()%>%addTiles(
+#'     urlTemplate = 'http://127.0.0.1:8000/{z}/{x}/{y}.png')%>%
+#'     setView(lng=121,lat =31,zoom=7)
 getTiles <- function(extent=c(72,135,18,54),level=1:20,down.wd='/tmp',par=15) {
     extent.cn<-extent
     cat('indexing map tiles ....\n')
